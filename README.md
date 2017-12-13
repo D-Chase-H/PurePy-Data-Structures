@@ -1,6 +1,11 @@
 # PurePy-Data-Structures
 Pure Python Data Structures
 
+Development Stage: Pre-Alpha
+
+DISCLAIMER: Some of these data structures are undergoing a major re-work, that will greatly increase efficiency. I strongly reccommend that you wait until I finish my major re-wrok for a data structure before you use it. I will give each data structure it's own readme with a description of the data structure and what each method does. So, if a data structure's folder has it's own readme, then it's had it's re-work.
+
+
 All Data Structures were made by me, by reading about the concept of the data structures and implementing them in the way I understood it. 
 This means that no code here was taken from any guide or tutorial in any way. 
 
