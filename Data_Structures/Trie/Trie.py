@@ -213,32 +213,50 @@ class Trie(object):
     
     
 if __name__ == "__main__":
+    import cProfile
+    from random import randrange
 
-    words = []
+    def get_10000_words():
+        words = []
+        with open("words_alpha.txt", "r") as f:
+            tally = 0
+            for line in f:
+                if tally >= 10000:
+                    break
+                words.append(line[:-1])
+                tally += 1
+            f.close()
 
-    with open("words_alpha.txt", "r") as f:
-        for line in f:
-            words.append(line[:-1])
-        f.close()
+        return words
 
-    new_trie = Trie()
+    def get_all_words():
+        words = []
+        with open("words_alpha.txt", "r") as f:
+            for line in f:
+                words.append(line[:-1])
+            f.close()
+        return words
+
+
+    words = get_10000_words()
+    trie1 = Trie()
+    print(len(words))
 
     for w in words:
-        new_trie.insert_node(w)
+        trie1.insert_word(w)
+        
+    print("\nstart making arr recursivley")
+    cProfile.run("trie1.as_list_recursive()")
+    print("\nstart making arr iterativley")
+    cProfile.run("trie1.as_list_iterative()")
+    print("\n")
 
-    arr_of_words = (new_trie.as_list())
-    print("")
+    for i in range(10000):
+        new_word = ''.join([chr(randrange(96, 124)) for i in range(900)])
+        trie1.insert_word(new_word)
 
-    d = new_trie.delete_word("aasvogels")
-    print(d)
-    print("\n\n")
-    arr_of_words = (new_trie.as_list())
-    print(len(arr_of_words))
-    print("")
-
-    d = new_trie.delete_word("aasvogel")
-    print(d)
-    print("\n\n")
-    arr_of_words = (new_trie.as_list())
-    print(len(arr_of_words))
-    print("")
+    print("\nstart making arr recursivley")
+    cProfile.run("trie1.as_list_recursive()")
+    print("\nstart making arr iterativley")
+    cProfile.run("trie1.as_list_iterative()")
+    print("\n")
