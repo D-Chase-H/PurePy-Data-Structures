@@ -38,7 +38,6 @@ class Trie(object):
     """docstring for Trie."""
     def __init__(self):
         self.start_nodes = dict()
-        self.total_mem = 0
 
 
     def insert_word(self, new_word):
@@ -173,9 +172,7 @@ class Trie(object):
 
 
     def as_list_iterative(self):
-        visited = set()
         def iterative_search(node_dict):
-            nonlocal visited
             nonlocal words
 
             temp_dict = dict()
@@ -183,8 +180,6 @@ class Trie(object):
             for partial_word, child_dict in node_dict.items():
                 for child_lett, child_node in child_dict.items():
                     if child_node not in visited:
-                        self.total_mem += sys.getsizeof(child_node) + sys.getsizeof(child_node.data) + sys.getsizeof(child_node.children) + sys.getsizeof(child_node.end_of_word)
-                        visited.add(child_node)
 
                     new_partial_word = partial_word + child_lett
 
@@ -203,9 +198,6 @@ class Trie(object):
         words = []
 
         for lett, curr_node in self.start_nodes.items():
-            if curr_node not in visited:
-                self.total_mem += sys.getsizeof(curr_node) + sys.getsizeof(curr_node.data) + sys.getsizeof(curr_node.children) + sys.getsizeof(curr_node.end_of_word)
-                visited.add(curr_node)
             if curr_node.end_of_word is True:
                 words.append(lett)
 
