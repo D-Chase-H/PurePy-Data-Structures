@@ -2,8 +2,6 @@
 # Author: Dustin Chase Harmon
 
 """
-License: 
-
 MIT License
 
 Copyright (c) 2017 Dustin Chase Harmon
@@ -26,156 +24,202 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-
+import sys
 
 class Node(object):
     """docstring for Node."""
     def __init__(self):
         self.data = None
         self.end_of_word = False
-        self.children = []
+        self.children = dict()
 
 
 class Trie(object):
     """docstring for Trie."""
     def __init__(self):
-        self.start_nodes = []
+        self.start_nodes = dict()
+        self.total_mem = 0
 
 
-    def insert_node(self, new_word):
+    def insert_word(self, new_word):
 
-        curr_node = None
-        node_list = self.start_nodes
-        end = False
-        for index, lett in enumerate(new_word):
-            node_in_list = False
-            if index == len(new_word) - 1:
-                end = True
+        first_lett = new_word[0]
 
-            for node in node_list:
-                if node.data == lett:
-                    curr_node = node
-                    node_list = node.children
-                    node_in_list = True
-                    break
+        try:
+            new_node = self.start_nodes[first_lett]
+        except KeyError:
+            new_node = Node()
+            new_node.data = first_lett
 
-            if node_in_list is False:
-                new_node = Node()
-                new_node.data = lett
+            self.start_nodes[first_lett] = new_node
 
-                if index == 0:
-                    self.start_nodes.append(new_node)
+        if len(new_word) == 1:
+            new_node.end_of_word = True
+            return
 
-                if curr_node is not None:
-                    curr_node.children.append(new_node)
+        else:
+            curr_node = self.start_nodes[first_lett]
 
-                curr_node = new_node
-                node_list = new_node.children
+            for index, lett in enumerate(new_word[1:]):
 
-            if end is True:
-                curr_node.end_of_word = True
+                try:
+                    curr_node = curr_node.children[lett]
+                except KeyError:
+                    new_child_node = Node()
+                    new_child_node.data = lett
 
+                    curr_node.children[lett] = new_child_node
+                    curr_node = new_child_node
 
-    def as_list(self):
-
-        def recursive_search(node, curr_word, words=[]):
-
-            if node.end_of_word is True:
-                words.append(curr_word)
-
-            for child in node.children:
-                partial = curr_word + child.data
-                recursive_search(child, partial, words)
-
-            return words
-
-        for node in self.start_nodes:
-            curr_word = node.data
-            words = recursive_search(node, curr_word)
-
-        return words
+                if index == len(new_word) - 2:
+                    curr_node.end_of_word = True
+        return
 
 
     def search(self, word):
-
-        word = list(word)
-        last_index = len(word) - 1
-        node_list = self.start_nodes
         is_in_trie = False
+        curr_node = self.start_nodes[word[0]]
+        index = 1
 
-        for index, letter in enumerate(word):
-            letter_check = False
+        while True:
+            try:
+                curr_node = curr_node.children[word[index]]
 
-            for node in node_list:
+            except IndexError:
+                if curr_node.end_of_word is True:
+                    is_in_trie = True
+                break
 
-                if node.data == letter:
-                    letter_check = True
-                    node_list = node.children
+            except KeyError:
+                break
 
-                    if index == last_index:
-                        if node.end_of_word is True:
-                            is_in_trie = True
-                            return is_in_trie
-                    break
-
-            if letter_check is False:
-                is_in_trie = False
-                return is_in_trie
+            index += 1
 
         return is_in_trie
 
 
-
     def delete_word(self, word):
-        word = list(word)
-        last_index = len(word) - 1
-        node_list = self.start_nodes
-        fork_node = None
-        levels_since_fork = 0
+        try:
+            curr_node = self.start_nodes[word[0]]
+        except KeyError:
+            raise ValueError("Word is not in the Trie")
 
-        for index, letter in enumerate(word):
-            letter_check = False
+        prev_node = None
+        fork_node = curr_node
+        fork_letter = None
+        index = 0
 
-            for node in node_list:
+        while True:
+            if curr_node.data != word[index]:
+                raise ValueError("Word is not in the Trie")
 
-                if node.data == letter:
-                    levels_since_fork += 1
-                    letter_check = True
-                    node_list = node.children
+            if curr_node.end_of_word is True and len(curr_node.children) <= 1:
+                fork_node = prev_node
+                fork_letter = word[index]
 
-                    if index == last_index:
-                        if node.end_of_word is True:
-                            if not node.children:
-                                print("step1")
+            index += 1
 
-                                nodes_to_del = []
-                                curr_node = fork_node
-                                for n in range(levels_since_fork):
-                                    next_node = curr_node.children[0]
-                                    curr_node.children.remove(next_node)
-                                    curr_node = next_node
-                                    nodes_to_del.append(curr_node)
+            try:
+                prev_node = curr_node
+                curr_node = curr_node.children[word[index]]
+            except IndexError:
+                # If we are on the last letter of the word and it is not marked
+                # as the end of a word, then the word is not in the Trie, then
+                # we raise a ValueError.
+                if curr_node.end_of_word is False:
+                    raise ValueError("Word is not in the Trie")
 
-                                for n in nodes_to_del:
-                                    del n
+                break
 
-                            else:
-                                print("step2")
-                                node.end_of_word = False
-                            return "Word successfully deleted"
+        if fork_node:
+            try:
+                del fork_node.children[fork_letter]
+            except KeyError:
+                # This handles the deletion of single character words.
+                del fork_node
 
-                    if node.end_of_word is True and len(node.children) == 1:
-                        levels_since_fork = 0
-                        fork_node = node
-                    break
-
-            if letter_check is False:
-                return "Word not found in Trie."
-
+        else:
+            # This branching path occurs whenever the most recent forking node
+            # is the node that contains the last letter of the word.
+            # If the last node has children nodes, then keep the node, but
+            # change the node's end_of_wrd attribute to False.
+            # However, if it has no children nodes, then delete it.
+            if curr_node.children:
+                curr_node.end_of_word = False
+            else:
+                del curr_node
         return
 
 
+    def as_list_recursive(self):
+        def recursive_search(node, curr_word):
+            nonlocal words
 
+            if node.end_of_word is True:
+                words.append(curr_word)
+
+            for child_node in node.children.values():
+                partial = curr_word + child_node.data
+                recursive_search(child_node, partial)
+
+            return
+
+        words = []
+        for node in self.start_nodes.values():
+            first_lett = node.data
+            recursive_search(node, first_lett)
+
+        return words
+
+
+    def as_list_iterative(self):
+        visited = set()
+        def iterative_search(node_dict):
+            nonlocal visited
+            nonlocal words
+
+            temp_dict = dict()
+
+            for partial_word, child_dict in node_dict.items():
+                for child_lett, child_node in child_dict.items():
+                    if child_node not in visited:
+                        self.total_mem += sys.getsizeof(child_node) + sys.getsizeof(child_node.data) + sys.getsizeof(child_node.children) + sys.getsizeof(child_node.end_of_word)
+                        visited.add(child_node)
+
+                    new_partial_word = partial_word + child_lett
+
+                    if child_node.end_of_word is True:
+                        words.append(new_partial_word)
+
+                        if child_node.children:
+                            temp_dict[new_partial_word] = child_node.children
+
+                    else:
+                        temp_dict[new_partial_word] = child_node.children
+
+            return temp_dict
+
+
+        words = []
+
+        for lett, curr_node in self.start_nodes.items():
+            if curr_node not in visited:
+                self.total_mem += sys.getsizeof(curr_node) + sys.getsizeof(curr_node.data) + sys.getsizeof(curr_node.children) + sys.getsizeof(curr_node.end_of_word)
+                visited.add(curr_node)
+            if curr_node.end_of_word is True:
+                words.append(lett)
+
+            node_dict = {lett: curr_node.children}
+
+            while True:
+                node_dict = iterative_search(node_dict)
+                if not node_dict:
+                    break
+
+        return words
+    
+    
+    
 if __name__ == "__main__":
 
     words = []

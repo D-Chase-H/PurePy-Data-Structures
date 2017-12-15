@@ -2,8 +2,6 @@
 # Author: Dustin Chase Harmon
 
 """
-License: 
-
 MIT License
 
 Copyright (c) 2017 Dustin Chase Harmon
@@ -27,6 +25,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+
 class Node(object):
     """docstring for Node."""
 
@@ -45,23 +44,7 @@ class LinkedList(object):
         self.length = 0
 
 
-    def append_left(self, data, double=False):
-        new_node = Node()
-        new_node.data = data
-
-        if not self.start_node:
-            self.start_node = new_node
-            self.end_node = new_node
-        else:
-            new_node.next_node = self.start_node
-
-            if double is True:
-                self.start_node.previous_node = new_node
-
-            self.start_node = new_node
-
-
-    def append_node(self, data, double=True):
+    def append(self, data, double=True):
         new_node = Node()
         new_node.data = data
 
@@ -80,6 +63,49 @@ class LinkedList(object):
         return
 
 
+    def append_left(self, data, double=False):
+        new_node = Node()
+        new_node.data = data
+
+        if not self.start_node:
+            self.start_node = new_node
+            self.end_node = new_node
+        else:
+            new_node.next_node = self.start_node
+
+            if double is True:
+                self.start_node.previous_node = new_node
+
+            self.start_node = new_node
+
+
+    def insert_at_index(self, data, index, double=False):
+        assert index <= self.length - 1, \
+        ("\nIndexing Error: "
+         "The index provided exceeds the maximum index in the Linked List.")
+        assert index < 0, \
+        ("\nIndexing Error: "
+         "The index provided is below the minimum index in the Linked List.")
+
+        curr_node = self.start_node
+        prev_node = None
+        curr_index = 0
+
+        while curr_node:
+            if curr_index == index:
+                new_node = Node()
+                new_node.data = data
+                prev_node.next_node = new_node
+                new_node.next_node = curr_node
+                if double is True:
+                    new_node.previous_node = prev_node
+                    curr_node.previous_node = new_node
+                return
+
+            index += 1
+        return
+
+
     def perform_removal(self, prev_node, removal_node, next_node, double=False):
         if not prev_node:
             if removal_node.next_node:
@@ -95,8 +121,10 @@ class LinkedList(object):
 
             else:
                 prev_node.next_node = None
+                self.end_node = prev_node
 
         self.length -= 1
+        del removal_node
         return
 
 
@@ -115,45 +143,17 @@ class LinkedList(object):
             if curr_node.data == data:
                 next_node = curr_node.next_node
                 self.perform_removal(prev_node, removal_node, next_node, double)
-                del curr_node
 
                 if remove_all is False:
                     return
 
             prev_node = curr_node
             curr_node = curr_node.next_node
-
         return
 
 
     def remove_all_occurences(self, data, double=False):
-        self.remove(data, double, remove_all=True)
-        return
-
-
-    def insert_at_index(self, data, index, double=False):
-        assert index <= self.length - 1, \
-        ("\nIndexing Error: "
-         "The index provided exceeds the maximum index in the Linked List.")
-
-        curr_node = self.start_node
-        prev_node = None
-        curr_index = 0
-
-        while curr_node:
-            if curr_index == index:
-                new_node = Node()
-                new_node.data = data
-                prev_node.next_node = new_node
-                new_node.next_node = curr_node
-                if double is True:
-                    new_node.previous_node = prev_node
-                    curr_node.previous_node = new_node
-                return
-
-            index += 1
-
-        return
+        return self.remove(data, double, True)
 
 
     def get_slice(self, start_index, end_index):
@@ -215,8 +215,31 @@ class DoubleyLinkedList(LinkedList):
     def __init__(self):
         super().__init__()
 
-    def __append_node(self, data):
-        return self.append_node(data, True)
+    def __append(self, data):
+        return self.append(data, True)
+
+
+    def __append_left(self):
+        return self.append_left(data, True)
+
+
+    def __perform_removal(self, prev_node, removal_node, next_node):
+        return self.perform_removal(prev_node, removal_node, next_node, True)
+
+
+    def __remove(self, data, remove_all=False):
+        return self.remove(data, True, remove_all)
+
+
+    def __remove_all_occurences(self, data):
+        return self.remove_all_occurences(data, True, True)
+
+
+    def __insert_at_index(self, data, index):
+        return self.insert_at_index(data, index, True)
+
+
+
 
 
 
@@ -232,8 +255,8 @@ if __name__ == '__main__':
     dll = DoubleyLinkedList()
 
     for num in arr:
-        sll.append_node(num)
-        dll.append_node(num)
+        sll.append(num)
+        dll.append(num)
 
 
     sll_arr = sll.as_list()
