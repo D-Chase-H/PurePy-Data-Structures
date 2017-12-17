@@ -1,4 +1,7 @@
 # PurePy-Data-Structures
+
+CURRENTLY IN DEVELOPMENT
+
 Pure Python Data Structures
 
 All Data Structures were made by me, by reading about the concept of the data structures and implementing them in the way I understood it. 
