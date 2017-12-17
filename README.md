@@ -1,4 +1,7 @@
 # PurePy-Data-Structures
+
+CURRENTLY IN DEVELOPMENT
+
 Pure Python Data Structures
 
 Development Stage: Pre-Alpha
