@@ -1,8 +1,12 @@
 # PurePy-Data-Structures
 
-NEWS: 12/21/2017
-==================
-I'm putting development on hold for a little while, as I have ben fighting severe bronchitis for over 2 months now, and I had to go to the ER yesterday from difficulty breathing. I'm on my third round of antibiotics and steroids, and I'm on a nebulizer for the time being, which has helped. However I need to take some time to rest and recover before I continue working on this or any other project.
+**NEWS: 12/21/2017**
+
+    I'm putting development on hold for a little while, as I have ben fighting very severe case of bronchitis for
+    over 2 months now, and I had to go to the ER yesterday from difficulty breathing, because I also have moderate
+    to severe asthma. I'm on my third round of antibiotics and steroids, and I'm on a nebulizer for the time being,
+    which has helped. However I need to take some time to rest and recover before I continue working on this or any
+    other project.
 
 
 CURRENTLY IN DEVELOPMENT
