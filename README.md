@@ -1,19 +1,11 @@
 # PurePy-Data-Structures
 
-**NEWS: 12/21/2017**
 
-    I'm putting development on hold for a little while, as I have been fighting very severe case of bronchitis for
-    over 2 months now, and I had to go to the ER yesterday from difficulty breathing, because I also have moderate
-    to severe asthma. I'm on my third round of antibiotics and steroids, and I'm on a nebulizer for the time being,
-    which has helped. However I need to take some time to rest and recover before I continue working on this or any
-    other project.
-
-
-CURRENTLY IN DEVELOPMENT
+CURRENTLY IN DEVELOPMENT: Updates will come as I find time to work on this project.
 
 Pure Python Data Structures
 
-Development Stage: Pre-Alpha
+Development Stage: Alpha
 
 DISCLAIMER: Some of these data structures are undergoing a major re-work, that will greatly increase efficiency. I strongly reccommend that you wait until I finish my major re-wrok for a data structure before you use it. I will give each data structure it's own readme with a description of the data structure and what each method does. So, if a data structure's folder has it's own readme, then it's had it's re-work.
 
@@ -32,5 +24,5 @@ On off chance you are reading this before I make a real readme....
 
 Another DISCLAIMER: 
     This readme WILL be changed soon, this is just the initial upload.
-    Right now a few of the Data Structures I have made need some polish, and a most in the trees sub-folder are empty, but I wanted to get 
-    this repository started, so there WILL be changes and clone the repo at your own risk.
+    Right now a few of the Data Structures I have made need some polish, and most in the trees sub-folder are empty, but I wanted to get 
+    this repository started, so there WILL be changes. Clone the repo at your own risk.
