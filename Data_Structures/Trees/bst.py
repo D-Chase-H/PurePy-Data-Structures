@@ -1,5 +1,5 @@
 
-# Author: Dustin Chase Harmon
+#   Author: D-Chase-H
 
 """
 License: 
